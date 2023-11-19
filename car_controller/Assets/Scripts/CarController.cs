@@ -4,39 +4,52 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    [SerializeField] Transform L01_Tire;
-    //calculate OY forces;
+    // Tire refrence;
+    [SerializeField] Transform L01_TireTransform;
+    [SerializeField] Transform R01_TireTransform;
+    [SerializeField] Transform L02_TireTransform;
+    [SerializeField] Transform R02_TireTransform;
+    
+    //spring parameters;
     [SerializeField] float Strength = 10f;
-    [SerializeField] float RestDist = 1f; // |Offset| <= MaxOffset
+    [SerializeField] float RestDist = 10f;
+    [SerializeField] float MaxOffset; // |offset| <= RestDist
     [SerializeField] float Dampning = 10f;
 
-
     Rigidbody carRigidbody;
-    // Start is called before the first frame update
     void Awake()
     {
         carRigidbody = GetComponent<Rigidbody>();
     }
-
-    private void FixedUpdate()
+    
+    void OY_Forces(Transform tireTransform)
     {
-        //suspension force
-        bool rayHit = Physics.Raycast(transform.position, Vector3.down);
-        if (rayHit) {
+        //suspension force for one tire only
+        bool rayDidHit = Physics.Raycast(tireTransform.position, Vector3.down);
+        if (rayDidHit)
+        {
 
-            Vector3 springDir = L01_Tire.up;
-            
-            Vector3 tireWorldVel = carRigidbody.GetPointVelocity(L01_Tire.position);
+            Vector3 springDir = tireTransform.up;
+
+            Vector3 tireWorldVel = carRigidbody.GetPointVelocity(tireTransform.position);
 
             RaycastHit tireRay;
-            Physics.Raycast(L01_Tire.position, Vector3.down, out tireRay);
+            Physics.Raycast(tireTransform.position, Vector3.down, out tireRay);
             float offset = RestDist - tireRay.distance;
 
             float vel = Vector3.Dot(springDir, tireWorldVel);
 
             float force = (offset * Strength) - (vel * Dampning);
 
-            carRigidbody.AddForceAtPosition(springDir * force, L01_Tire.position);
+            carRigidbody.AddForceAtPosition(springDir * force, tireTransform.position);
         }
+
+    }
+    private void FixedUpdate()
+    {
+        OY_Forces(L01_TireTransform);
+        OY_Forces(R01_TireTransform);
+        OY_Forces(L02_TireTransform);
+        OY_Forces(R02_TireTransform);
     }
 }
