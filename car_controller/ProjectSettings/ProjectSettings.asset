@@ -833,8 +833,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: car_controller
-  metroPackageVersion: 
+  metroPackageName: carcontroller
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -842,7 +842,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: car_controller
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: car_controller
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
