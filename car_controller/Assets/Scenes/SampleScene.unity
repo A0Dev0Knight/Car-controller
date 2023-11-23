@@ -320,7 +320,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 13.206, y: 13.206, z: 13.206}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 799414111}
@@ -790,7 +790,7 @@ Transform:
   m_GameObject: {fileID: 2004683951}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.54, z: 0}
+  m_LocalPosition: {x: 0, y: 2.15, z: 0}
   m_LocalScale: {x: 1, y: 0.50905, z: 1.9064}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -808,7 +808,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2004683951}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -839,10 +839,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ce8c1e6124ce448bcc09da3d4758a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  L01_Tire: {fileID: 1911242203}
-  Strength: 10
-  RestDist: 1
-  Dampning: 10
+  L01_TireTransform: {fileID: 1911242203}
+  R01_TireTransform: {fileID: 1860984029}
+  L02_TireTransform: {fileID: 872514869}
+  R02_TireTransform: {fileID: 11257615}
+  Strength: 200
+  RestDist: 0.5
+  MaxCompression: 1
+  Dampning: 15
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

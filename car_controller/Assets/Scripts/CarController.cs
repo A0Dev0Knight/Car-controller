@@ -13,7 +13,7 @@ public class CarController : MonoBehaviour
     //spring parameters;
     [SerializeField] float Strength = 10f;
     [SerializeField] float RestDist = 10f;
-    [SerializeField] float MaxOffset; // |offset| <= RestDist
+    [SerializeField] float MaxCompression = 1f; // |offset| <= RestDist
     [SerializeField] float Dampning = 10f;
 
     Rigidbody carRigidbody;
@@ -28,7 +28,6 @@ public class CarController : MonoBehaviour
         bool rayDidHit = Physics.Raycast(tireTransform.position, Vector3.down);
         if (rayDidHit)
         {
-
             Vector3 springDir = tireTransform.up;
 
             Vector3 tireWorldVel = carRigidbody.GetPointVelocity(tireTransform.position);
@@ -43,7 +42,7 @@ public class CarController : MonoBehaviour
 
             carRigidbody.AddForceAtPosition(springDir * force, tireTransform.position);
         }
-
+        
     }
     private void FixedUpdate()
     {
