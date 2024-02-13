@@ -13,7 +13,7 @@ public class CarController : MonoBehaviour
     //spring parameters;
     [SerializeField] float Strength = 10f;
     [SerializeField] float RestDist = 10f;
-    [SerializeField] float MaxCompression = 1f; // |offset| <= RestDist
+    [SerializeField] float MaxOffset = 1f; // |offset| <= RestDist
     [SerializeField] float Dampning = 10f;
 
     Rigidbody carRigidbody;
@@ -25,15 +25,19 @@ public class CarController : MonoBehaviour
     void OY_Forces(Transform tireTransform)
     {
         //suspension force for one tire only
-        bool rayDidHit = Physics.Raycast(tireTransform.position, Vector3.down);
+
+        // store raycast info in tireRay
+        RaycastHit tireRay;
+        
+        // get the info on the raycast and also store the boolean
+        bool rayDidHit = Physics.Raycast(tireTransform.position, -tireTransform.transform.up, out tireRay, (RestDist + MaxOffset));
+        
         if (rayDidHit)
         {
-            Vector3 springDir = tireTransform.up;
+            Vector3 springDir = tireTransform.transform.up;
 
             Vector3 tireWorldVel = carRigidbody.GetPointVelocity(tireTransform.position);
 
-            RaycastHit tireRay;
-            Physics.Raycast(tireTransform.position, Vector3.down, out tireRay);
             float offset = RestDist - tireRay.distance;
 
             float vel = Vector3.Dot(springDir, tireWorldVel);

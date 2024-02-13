@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 11257614}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.565, y: 0, z: -0.285}
+  m_LocalPosition: {x: 0.4, y: -0.4, z: -0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -320,7 +320,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 13.206, y: 13.206, z: 13.206}
+  m_LocalScale: {x: 100, y: 13.206, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 799414111}
@@ -621,7 +621,7 @@ Transform:
   m_GameObject: {fileID: 872514868}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.607, y: 0, z: -0.285}
+  m_LocalPosition: {x: -0.4, y: -0.4, z: -0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -652,7 +652,7 @@ Transform:
   m_GameObject: {fileID: 1860984028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.565, y: 0, z: 0.34}
+  m_LocalPosition: {x: 0.4, y: -0.4, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -683,7 +683,7 @@ Transform:
   m_GameObject: {fileID: 1911242202}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.607, y: 0, z: 0.34}
+  m_LocalPosition: {x: -0.4, y: -0.4, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -790,7 +790,7 @@ Transform:
   m_GameObject: {fileID: 2004683951}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.15, z: 0}
+  m_LocalPosition: {x: -2.961, y: 2.15, z: 0}
   m_LocalScale: {x: 1, y: 0.50905, z: 1.9064}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -808,7 +808,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2004683951}
   serializedVersion: 4
-  m_Mass: 10
+  m_Mass: 1500
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -825,7 +825,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 10
   m_CollisionDetection: 0
 --- !u!114 &2004683957
 MonoBehaviour:
@@ -843,10 +843,10 @@ MonoBehaviour:
   R01_TireTransform: {fileID: 1860984029}
   L02_TireTransform: {fileID: 872514869}
   R02_TireTransform: {fileID: 11257615}
-  Strength: 200
-  RestDist: 0.5
-  MaxCompression: 1
-  Dampning: 15
+  Strength: 3600
+  RestDist: 1.5
+  MaxOffset: 1
+  Dampning: 850
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
