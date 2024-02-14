@@ -15,6 +15,10 @@ public class CarController : MonoBehaviour
     [SerializeField] float RestDist = 10f;
     [SerializeField] float MaxOffset = 1f; // |offset| <= RestDist
     [SerializeField] float Dampning = 10f;
+    [SerializeField] float TireMass = 5f;
+
+    [SerializeField] AnimationCurve BackTirelookupCurve;
+    [SerializeField] AnimationCurve FrontTirelookupCurve;
 
     Rigidbody carRigidbody;
     void Awake()
@@ -48,11 +52,34 @@ public class CarController : MonoBehaviour
         }
         
     }
+    
+    void OX_Forces(Transform tireTransform)
+    {
+        RaycastHit tireRay;
+        bool rayDidHit = Physics.Raycast(tireTransform.position, -tireTransform.transform.up, out tireRay, (RestDist + MaxOffset));
+
+        if (rayDidHit)
+        {
+            Vector3 slideDir = tireTransform.transform.right;
+            Vector3 tireVelocity = carRigidbody.GetPointVelocity(tireTransform.position);
+            float tireVelocityOX = Vector3.Dot(slideDir, tireVelocity);
+            float percentage = (Vector3.Magnitude(tireVelocity) * tireVelocityOX) / 100;
+            float grip = BackTirelookupCurve.Evaluate(percentage);
+            float canceling = (-tireVelocityOX * grip)/Time.fixedDeltaTime;
+
+            carRigidbody.AddForceAtPosition(slideDir * TireMass * canceling, tireTransform.position);
+        }
+    }
+    void Forces(Transform tireTransform)
+    {
+        OY_Forces(tireTransform);
+        OX_Forces(tireTransform);
+    }
     private void FixedUpdate()
     {
-        OY_Forces(L01_TireTransform);
-        OY_Forces(R01_TireTransform);
-        OY_Forces(L02_TireTransform);
-        OY_Forces(R02_TireTransform);
+        Forces(L01_TireTransform);
+        Forces(R01_TireTransform);
+        Forces(L02_TireTransform);
+        Forces(R02_TireTransform);
     }
 }
