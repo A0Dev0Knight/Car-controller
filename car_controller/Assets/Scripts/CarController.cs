@@ -21,6 +21,9 @@ public class CarController : MonoBehaviour
     [SerializeField] AnimationCurve BackTirelookupCurve;
     [SerializeField] AnimationCurve FrontTirelookupCurve;
 
+    // acceleration curve
+    [SerializeField] AnimationCurve AccelerationCurve;
+
     Rigidbody carRigidbody;
     void Awake()
     {
@@ -59,13 +62,14 @@ public class CarController : MonoBehaviour
         RaycastHit tireRay;
         bool rayDidHit = Physics.Raycast(tireTransform.position, -tireTransform.transform.up, out tireRay, (RestDist + MaxOffset));
 
-        if (rayDidHit)
+        // viteza unei roti in R^3
+        Vector3 tireVelocity = carRigidbody.GetPointVelocity(tireTransform.position);
+
+        if (rayDidHit && Vector3.Magnitude(tireVelocity) != 0)
         {
             // versor pt directia ox a rotii
             Vector3 steerDir = tireTransform.transform.right;
             
-            // viteza unei roti in R^3
-            Vector3 tireVelocity = carRigidbody.GetPointVelocity(tireTransform.position);
             
             // viteza unei roti pe componenta ox
             float tireVelocityOX = Vector3.Dot(steerDir, tireVelocity);
