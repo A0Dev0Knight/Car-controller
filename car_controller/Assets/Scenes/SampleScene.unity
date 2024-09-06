@@ -1354,7 +1354,7 @@ GameObject:
   - component: {fileID: 1012482595}
   - component: {fileID: 1012482594}
   - component: {fileID: 1012482593}
-  - component: {fileID: 1012482592}
+  - component: {fileID: 1012482597}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1362,33 +1362,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!54 &1012482592
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1012482591}
-  serializedVersion: 4
-  m_Mass: 100
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &1012482593
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1469,12 +1442,39 @@ Transform:
   m_GameObject: {fileID: 1012482591}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.0654342, y: 1.64, z: 0.314}
+  m_LocalPosition: {x: -7.07, y: 2.721, z: -0.067}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1012482597
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012482591}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1028795710
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3083,8 +3083,8 @@ Transform:
   m_GameObject: {fileID: 2004683951}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.961, y: 0.71, z: 0}
-  m_LocalScale: {x: 1, y: 0.50905, z: 1.9064}
+  m_LocalPosition: {x: -2.961, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 0.24, z: 1.9064}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1911242203}
@@ -3101,7 +3101,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2004683951}
   serializedVersion: 4
-  m_Mass: 1500
+  m_Mass: 1000
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -3132,132 +3132,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ce8c1e6124ce448bcc09da3d4758a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  L01_TireTransform: {fileID: 1911242203}
-  R01_TireTransform: {fileID: 1860984029}
-  L02_TireTransform: {fileID: 872514869}
-  R02_TireTransform: {fileID: 11257615}
-  Strength: 3600
-  RestDist: 1.5
-  MaxOffset: 1
-  Dampning: 850
-  TireMass: 5
-  BackTirelookupCurve:
+  rayPoints:
+  - {fileID: 1911242203}
+  - {fileID: 1860984029}
+  - {fileID: 872514869}
+  - {fileID: 11257615}
+  drivable:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0.000000103376806
-      value: 0.59197134
-      inSlope: -0.2691866
-      outSlope: -0.2691866
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.39161912
-    - serializedVersion: 3
-      time: 0.33706048
-      value: 0.48733333
-      inSlope: -0.83300865
-      outSlope: -0.83300865
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.1887886
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.57246596
-      value: 0.117892236
-      inSlope: -0.0031416935
-      outSlope: -0.0031416935
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1.0000464
-      value: 0.05896911
-      inSlope: -0.2493334
-      outSlope: -0.2493334
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.3396768
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  FrontTirelookupCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.93395996
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.35452315
-      value: 0.06380542
-      inSlope: 0.13729963
-      outSlope: 0.13729963
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.09724917
-    - serializedVersion: 3
-      time: 1
-      value: 0.056602478
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  AccelerationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.5070801
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.33229977
-      value: 0.98208016
-      inSlope: 0.0540879
-      outSlope: 0.0540879
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.09666151
-    - serializedVersion: 3
-      time: 0.6789477
-      value: 0.98643386
-      inSlope: -0.05275843
-      outSlope: -0.05275843
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.22492647
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.99997884
-      value: 0.39858347
-      inSlope: -1.7649391
-      outSlope: -1.7649391
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.17700176
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_Bits: 0
+  springStiffness: 30000
+  restLength: 1
+  maxSpringTarvel: 0.5
+  damperStiffness: 3000
+  wheelRadius: 0.33
 --- !u!1001 &2081516332
 PrefabInstance:
   m_ObjectHideFlags: 0
