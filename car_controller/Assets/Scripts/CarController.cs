@@ -20,6 +20,8 @@ public class CarController : MonoBehaviour
         public bool canSteer;
         public bool isGrounded;
         public float tireGrip;
+        public bool isFrontWheel;
+        
     }
 
     // car properties
@@ -37,11 +39,14 @@ public class CarController : MonoBehaviour
 
 
 
-
+    #region Steering Functions
     // car steering properties
     [Space]
-    [BoxGroup("Car Steering Settings")] [SerializeField] private float turningRadius;
+    [BoxGroup("Car Steering Settings")] [SerializeField] private float maxSteeringAngle = 30f;
     [BoxGroup("Car Steering Settings")] [SerializeField] private float tireMass = 30f;
+    [BoxGroup("Car Steering Settings")] [SerializeField] private AnimationCurve frontTiresSlideCurve;
+    [BoxGroup("Car Steering Settings")] [SerializeField] private AnimationCurve backTiresSlideCurve;
+
 
     private void Steering()
     {
@@ -49,9 +54,25 @@ public class CarController : MonoBehaviour
         {
             if (wheel.isGrounded)
             {
-                float wheelSteeringVelocity = Vector3.Dot(wheel.rayPoint.right, carRigidbody.GetPointVelocity(transform.TransformPoint(wheel.rayPoint.position)));
+                Vector3 steerDirection = wheel.rayPoint.right;
+                Vector3 wheelVelocity = carRigidbody.GetPointVelocity(transform.TransformPoint(wheel.rayPoint.position));
+                Debug.DrawLine(wheel.rayPoint.position, wheel.rayPoint.position + wheelVelocity, Color.yellow);
+                
+                float wheelSteeringVelocity = Vector3.Dot(steerDirection, wheelVelocity);
 
-                float desiredVelocityChange = -wheelSteeringVelocity * wheel.tireGrip;
+                float slidingRatio = wheelSteeringVelocity / Vector3.Magnitude(wheelVelocity);
+
+                float tireGripFactor;
+                if (wheel.isFrontWheel)
+                {
+                    tireGripFactor = frontTiresSlideCurve.Evaluate(slidingRatio);
+                }
+                else
+                {
+                    tireGripFactor = backTiresSlideCurve.Evaluate(slidingRatio);
+                }
+
+                float desiredVelocityChange = -wheelSteeringVelocity * tireGripFactor;
 
                 float desiredAcceleration = desiredVelocityChange / Time.fixedDeltaTime;
 
@@ -63,6 +84,7 @@ public class CarController : MonoBehaviour
 
         }
     }
+    #endregion
 
     #region Suspension Functions
     // spring parameters;
@@ -118,6 +140,16 @@ public class CarController : MonoBehaviour
 
     #endregion
 
+    #region Debug Functions
+    private void DrawOrientation(Transform transform)
+    {
+        float size = 1;
+        Debug.DrawLine(transform.position, transform.position + transform.up * size, Color.green);
+        Debug.DrawLine(transform.position, transform.position + transform.forward * size, Color.blue);
+        Debug.DrawLine(transform.position, transform.position + transform.right * size, Color.red);
+    }
+    #endregion
+    
     #region Unity Functions
     void Awake()
     {
@@ -156,11 +188,23 @@ public class CarController : MonoBehaviour
             horizontal = +1;
         }
 
-        Debug.Log(vertical + " " + horizontal); 
+        foreach (WheelStruct wheel in carWheels)
+        {
+            DrawOrientation(wheel.rayPoint);
+        }
+
+        for (int i = 0; i < carWheels.Length; i++)
+        {
+            if (carWheels[i].canSteer)
+            {
+                Vector3 wheelSteeringDirection = this.transform.rotation.eulerAngles + new Vector3(0, horizontal * maxSteeringAngle, 0);
+                carWheels[i].rayPoint.eulerAngles = wheelSteeringDirection;
+            }
+        }
     }
     #endregion
-    
-    
+
+    #region OLD CODE
     /* OLD CODE
     // steering parameters
     [SerializeField] AnimationCurve BackTirelookupCurve;
@@ -211,4 +255,6 @@ public class CarController : MonoBehaviour
          OX_Forces(tireTransform);
      }
  */
+
+    #endregion
 }
