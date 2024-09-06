@@ -9,13 +9,62 @@ using System;
 public class CarController : MonoBehaviour
 {
     private Rigidbody carRigidbody;
+    private float horizontal;
+    private float vertical;
+
+    [Serializable]
+    public struct WheelStruct
+    {
+        public Transform rayPoint;
+        public bool hasPower;
+        public bool canSteer;
+        public bool isGrounded;
+        public float tireGrip;
+    }
 
     // car properties
     [Space]
-    [BoxGroup("Car Properties")] [SerializeField] Transform[] rayPoints;
+    [BoxGroup("Car Properties")] [SerializeField] WheelStruct[] carWheels;
     [BoxGroup("Car Properties")] [SerializeField] LayerMask drivable;
 
 
+
+    // car engine properties
+    [Space]
+    [BoxGroup("Care Engine Settings")] [SerializeField] float acceleration = 25f;
+    [BoxGroup("Care Engine Settings")] [SerializeField] float maxSpeed = 100f;
+    [BoxGroup("Care Engine Settings")] [SerializeField] float decelaration = 10f;
+
+
+
+
+    // car steering properties
+    [Space]
+    [BoxGroup("Car Steering Settings")] [SerializeField] private float turningRadius;
+    [BoxGroup("Car Steering Settings")] [SerializeField] private float tireMass = 30f;
+
+    private void Steering()
+    {
+        foreach (WheelStruct wheel in carWheels)
+        {
+            if (wheel.isGrounded)
+            {
+                float wheelSteeringVelocity = Vector3.Dot(wheel.rayPoint.right, carRigidbody.GetPointVelocity(transform.TransformPoint(wheel.rayPoint.position)));
+
+                float desiredVelocityChange = -wheelSteeringVelocity * wheel.tireGrip;
+
+                float desiredAcceleration = desiredVelocityChange / Time.fixedDeltaTime;
+
+                carRigidbody.AddForceAtPosition(wheel.rayPoint.right * tireMass * desiredAcceleration, wheel.rayPoint.position);
+            
+             
+                Debug.DrawLine(wheel.rayPoint.position, wheel.rayPoint.position + wheel.rayPoint.right * tireMass * desiredAcceleration, Color.blue);
+            }
+
+        }
+    }
+
+    #region Suspension Functions
     // spring parameters;
     [Space]
     [BoxGroup("Suspension Settings")] [SerializeField] float springStiffness = 10f;
@@ -26,27 +75,32 @@ public class CarController : MonoBehaviour
     
     void Suspension()
     {
-        foreach(Transform rayPoint in rayPoints)
+        for (int i = 0; i < carWheels.Length; i++)
         {
-            if (Physics.Raycast(rayPoint.position, -rayPoint.up, out RaycastHit rayHitInfo, restLength + wheelRadius + maxSpringTarvel))
+            if (Physics.Raycast(carWheels[i].rayPoint.position, -carWheels[i].rayPoint.up, out RaycastHit rayHitInfo, restLength + wheelRadius + maxSpringTarvel))
             {
                 float springLength = rayHitInfo.distance - wheelRadius;
                 float springCompression = (restLength - springLength) / maxSpringTarvel;
                 float springForce = springStiffness * springCompression;
 
-                float springVelocity = Vector3.Dot(carRigidbody.GetPointVelocity(transform.TransformPoint(rayPoint.position)), rayPoint.up);
+                float springVelocity = Vector3.Dot(carRigidbody.GetPointVelocity(transform.TransformPoint(carWheels[i].rayPoint.position)), carWheels[i].rayPoint.up);
                 float dampingForce = springVelocity * damperStiffness;
 
                 float netForce = springForce - dampingForce;
 
-                carRigidbody.AddForceAtPosition(rayPoint.up * netForce, rayPoint.position);
+                carRigidbody.AddForceAtPosition(carWheels[i].rayPoint.up * netForce, carWheels[i].rayPoint.position);
 
-                Debug.DrawLine(rayPoint.position, rayHitInfo.point, Color.red);
+                carWheels[i].isGrounded = true;
+
+
+                Debug.DrawLine(carWheels[i].rayPoint.position, rayHitInfo.point, Color.red);
             }
             else
             {
-                Debug.DrawLine(rayPoint.position, rayPoint.position + (-rayPoint.up) * (restLength + wheelRadius + maxSpringTarvel), Color.green);
-
+                carWheels[i].isGrounded = false;
+                
+                
+                Debug.DrawLine(carWheels[i].rayPoint.position, carWheels[i].rayPoint.position + (-carWheels[i].rayPoint.up) * (restLength + wheelRadius + maxSpringTarvel), Color.green);
             }
         }
 
@@ -61,6 +115,10 @@ public class CarController : MonoBehaviour
 
         Debug.Log(minStiffness + "   ---   " + maxStiffness);
     }
+
+    #endregion
+
+    #region Unity Functions
     void Awake()
     {
         carRigidbody = GetComponent<Rigidbody>();
@@ -70,9 +128,40 @@ public class CarController : MonoBehaviour
     private void FixedUpdate()
     {
         Suspension();
+        Steering();
     }
 
-    /* 
+    private void Update()
+    {
+        vertical = 0;
+        horizontal = 0;
+
+        if ( Input.GetKey(KeyCode.W))
+        {
+            vertical = +1;
+        }
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            vertical = -1;
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            horizontal = -1;
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            horizontal = +1;
+        }
+
+        Debug.Log(vertical + " " + horizontal); 
+    }
+    #endregion
+    
+    
+    /* OLD CODE
     // steering parameters
     [SerializeField] AnimationCurve BackTirelookupCurve;
     [SerializeField] AnimationCurve FrontTirelookupCurve;
