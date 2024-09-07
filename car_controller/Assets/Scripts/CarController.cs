@@ -30,15 +30,39 @@ public class CarController : MonoBehaviour
     [BoxGroup("Car Properties")] [SerializeField] WheelStruct[] carWheels;
     [BoxGroup("Car Properties")] [SerializeField] LayerMask drivable;
 
-
-
+    
+    
+    #region Acceleration / Deceleration Functions
     // car engine properties
     [Space]
-    [BoxGroup("Care Engine Settings")] [SerializeField] float acceleration = 25f;
-    [BoxGroup("Care Engine Settings")] [SerializeField] float maxSpeed = 100f;
-    [BoxGroup("Care Engine Settings")] [SerializeField] float decelaration = 10f;
+    [BoxGroup("Care Engine Settings")][SerializeField] float carTopSpeed = 100f;
+    [BoxGroup("Care Engine Settings")][SerializeField] float forwardForceStrenght = 5000f;
+    [BoxGroup("Care Engine Settings")][SerializeField] AnimationCurve torqueCurve;
 
+    private void Acceleration()
+    {
+        foreach (WheelStruct wheel in carWheels)
+        {
+            if (wheel.hasPower && wheel.isGrounded)
+            {
+                Vector3 accelerationDirection = wheel.rayPoint.forward;
 
+                if (vertical > 0)
+                {
+                    // we want to accelerate
+                    float carForwardSpeed = Vector3.Dot(this.transform.forward, carRigidbody.velocity);
+
+                    float carForwardSpeedNormalized = Mathf.Clamp01(Math.Abs(carForwardSpeed) / carTopSpeed);
+
+                    float availableTorque = torqueCurve.Evaluate(carForwardSpeedNormalized) * vertical;
+
+                    carRigidbody.AddForceAtPosition(accelerationDirection * availableTorque * forwardForceStrenght, wheel.rayPoint.position);
+                    Debug.Log(carRigidbody.velocity);
+                }
+            }
+        }
+    }
+    #endregion
 
     #region Steering Functions
     // car steering properties
@@ -73,7 +97,6 @@ public class CarController : MonoBehaviour
                 }
 
                 float desiredVelocityChange = -wheelSteeringVelocity * tireGripFactor;
-                Debug.Log(tireGripFactor);
                 float desiredAcceleration = desiredVelocityChange / Time.fixedDeltaTime;
 
                 carRigidbody.AddForceAtPosition(steerDirection * tireMass * desiredAcceleration, wheel.rayPoint.position);
@@ -166,6 +189,7 @@ public class CarController : MonoBehaviour
     {
         Suspension();
         Steering();
+        Acceleration();
     }
 
     private void Update()
