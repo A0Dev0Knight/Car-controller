@@ -21,6 +21,7 @@ public class CarController : MonoBehaviour
         public bool isGrounded;
         public float tireGrip;
         public bool isFrontWheel;
+        public Transform wheelVisual;
         
     }
 
@@ -101,20 +102,25 @@ public class CarController : MonoBehaviour
         {
             if (Physics.Raycast(carWheels[i].rayPoint.position, -carWheels[i].rayPoint.up, out RaycastHit rayHitInfo, restLength + wheelRadius + maxSpringTarvel))
             {
-                float springLength = rayHitInfo.distance - wheelRadius;
-                float springCompression = (restLength - springLength) / maxSpringTarvel;
-                float springForce = springStiffness * springCompression;
+                Vector3 springDir = carWheels[i].rayPoint.up;
 
-                float springVelocity = Vector3.Dot(carRigidbody.GetPointVelocity(transform.TransformPoint(carWheels[i].rayPoint.position)), carWheels[i].rayPoint.up);
+                Vector3 tireWorldVel = carRigidbody.GetPointVelocity(carWheels[i].rayPoint.position);
+
+                float springLength = rayHitInfo.distance - wheelRadius;
+                float springCompression = restLength - springLength;
+                
+                float springVelocity = Vector3.Dot(springDir, tireWorldVel);
+
+                float springForce = springStiffness * springCompression;
                 float dampingForce = springVelocity * damperStiffness;
 
                 float netForce = springForce - dampingForce;
 
-                carRigidbody.AddForceAtPosition(carWheels[i].rayPoint.up * netForce, carWheels[i].rayPoint.position);
+                carRigidbody.AddForceAtPosition(springDir * netForce, carWheels[i].rayPoint.position);
 
                 carWheels[i].isGrounded = true;
 
-
+                Debug.Log("wheel " + i + ": " + carWheels[i].rayPoint.up * netForce);
                 Debug.DrawLine(carWheels[i].rayPoint.position, rayHitInfo.point, Color.red);
             }
             else
@@ -193,14 +199,23 @@ public class CarController : MonoBehaviour
             DrawOrientation(wheel.rayPoint);
         }
 
+        // rotating the raypoint in local space, relative to the car itself, not global
         for (int i = 0; i < carWheels.Length; i++)
         {
             if (carWheels[i].canSteer)
             {
-                Vector3 wheelSteeringDirection = this.transform.rotation.eulerAngles + new Vector3(0, horizontal * maxSteeringAngle, 0);
-                carWheels[i].rayPoint.eulerAngles = wheelSteeringDirection;
+                Vector3 wheelSteeringDirection = new Vector3(0, horizontal * maxSteeringAngle, 0);
+                carWheels[i].rayPoint.localEulerAngles= wheelSteeringDirection;
             }
         }
+
+        for (int i = 0; i < carWheels.Length; i++)
+        {
+            Vector3 wheelPosition = carWheels[i].rayPoint.localPosition;
+            carWheels[i].wheelVisual.transform.localPosition= wheelPosition;
+            carWheels[i].wheelVisual.transform.localRotation = carWheels[i].rayPoint.localRotation;
+        }
+
     }
     #endregion
 
