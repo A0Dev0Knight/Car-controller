@@ -56,11 +56,10 @@ public class CarController : MonoBehaviour
             if (wheel.isGrounded)
             {
                 Vector3 steerDirection = wheel.rayPoint.right;
-                Vector3 wheelVelocity = carRigidbody.GetPointVelocity(transform.TransformPoint(wheel.rayPoint.position));
-                Debug.DrawLine(wheel.rayPoint.position, wheel.rayPoint.position + wheelVelocity, Color.yellow);
+                Vector3 wheelVelocity = carRigidbody.GetPointVelocity(wheel.rayPoint.position);
+                Debug.DrawLine(wheel.rayPoint.position, wheel.rayPoint.position + tireMass * wheelVelocity / Time.fixedDeltaTime, Color.yellow);
                 
                 float wheelSteeringVelocity = Vector3.Dot(steerDirection, wheelVelocity);
-
                 float slidingRatio = wheelSteeringVelocity / Vector3.Magnitude(wheelVelocity);
 
                 float tireGripFactor;
@@ -74,13 +73,14 @@ public class CarController : MonoBehaviour
                 }
 
                 float desiredVelocityChange = -wheelSteeringVelocity * tireGripFactor;
-
+                Debug.Log(tireGripFactor);
                 float desiredAcceleration = desiredVelocityChange / Time.fixedDeltaTime;
 
-                carRigidbody.AddForceAtPosition(wheel.rayPoint.right * tireMass * desiredAcceleration, wheel.rayPoint.position);
+                carRigidbody.AddForceAtPosition(steerDirection * tireMass * desiredAcceleration, wheel.rayPoint.position);
             
              
-                Debug.DrawLine(wheel.rayPoint.position, wheel.rayPoint.position + wheel.rayPoint.right * tireMass * desiredAcceleration, Color.blue);
+                Debug.DrawLine(wheel.rayPoint.position, wheel.rayPoint.position + steerDirection * tireMass * desiredAcceleration, Color.blue);
+                Debug.DrawLine(wheel.rayPoint.position, wheel.rayPoint.position + steerDirection * tireMass * (wheelSteeringVelocity / Time.fixedDeltaTime), Color.cyan);
             }
 
         }
@@ -120,7 +120,6 @@ public class CarController : MonoBehaviour
 
                 carWheels[i].isGrounded = true;
 
-                Debug.Log("wheel " + i + ": " + carWheels[i].rayPoint.up * netForce);
                 Debug.DrawLine(carWheels[i].rayPoint.position, rayHitInfo.point, Color.red);
             }
             else
